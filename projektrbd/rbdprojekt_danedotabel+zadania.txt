@@ -1,0 +1,140 @@
+INSERT INTO AKCJA (akcjaid, data, przebieg_akcji,adres,samochodid,klientid)
+VALUES (1, '2018-02-11', 'falszywy alarm nie doszlo do wlamania','Warszawa ul.Kwiatowa 4',100,1);
+
+INSERT INTO AKCJA (akcjaid, data, przebieg_akcji,adres,samochodid,klientid)
+VALUES (2, '2014-01-13', 'falszywy alarm nie doszlo do wlamania','Warszawa ul. Bezimiennego 1',200,2);
+
+INSERT INTO OSOBA (osobaid, adres, imie,nazwisko,data_urodzenia)
+VALUES (10,'ul.Kwiatowa 4','Wojtek','Gola','1990-02-11');
+
+INSERT INTO OSOBA (osobaid, adres, imie,nazwisko,data_urodzenia)
+VALUES (20,'ul.Bednarka 1','Milosz','Jatelnicki','2001-02-11');
+
+INSERT INTO OSOBA (osobaid, adres, imie,nazwisko,data_urodzenia)
+VALUES (30,'ul.kokosowa 1','Mikolaj','Grymowicz','2001-01-11');
+
+INSERT INTO OSOBA (osobaid, adres, imie,nazwisko,data_urodzenia)
+VALUES (40,'ul.Palmowa 1','Jarek','Kowalski','1999-11-01');
+
+INSERT INTO OSOBA (osobaid, adres, imie,nazwisko,data_urodzenia)
+VALUES (50,'ul.Dworcowa 4','Julek','Nowak','1992-12-02');
+
+INSERT INTO KLIENT (klientid, osobaid)
+VALUES (1,10);
+
+INSERT INTO KLIENT (klientid, osobaid)
+VALUES (2,20);
+
+INSERT INTO PRACOWNIK (pracownikid,data_zatrudnienia,stanowisko, osobaid)
+VALUES (1111,'1990-02-11','starszy ochroniarz',30);
+
+INSERT INTO PRACOWNIK (pracownikid,data_zatrudnienia,stanowisko, osobaid)
+VALUES (2221,'2000-02-11','mlodszy ochroniarz',40);
+
+INSERT INTO PRACOWNIK (pracownikid,data_zatrudnienia,stanowisko, osobaid)
+VALUES (3331,'1990-01-12','kapitan',50);
+
+INSERT INTO KSIEGOWOSC (KSIEGOWOSC, nrkarty, historia_transakcji,osobaid)
+VALUES (01,2134,'+50000',10);
+
+INSERT INTO KSIEGOWOSC (KSIEGOWOSC, nrkarty, historia_transakcji,osobaid)
+VALUES (04,5521,'-10000',40);
+
+INSERT INTO KSIEGOWOSC (KSIEGOWOSC, nrkarty, historia_transakcji,osobaid)
+VALUES (05,2521,'-100000',50);
+
+INSERT INTO KSIEGOWOSC (KSIEGOWOSC, nrkarty, historia_transakcji,osobaid)
+VALUES (03,4421,'-15000',30);
+
+INSERT INTO KSIEGOWOSC (KSIEGOWOSC, nrkarty, historia_transakcji,osobaid)
+VALUES (02,3421,'+150000',20);
+
+INSERT INTO KSIEGOWOSC_PRACOWNIK (ksiegowosc_pracownik,wyplata,czestotliowsc_wyplat, historia_wyplat,premia,pracownikid,ksiegowoscid)
+VALUES (11,800,'miesiecznie','-800-800-800',200,1111,03);
+
+INSERT INTO KSIEGOWOSC_PRACOWNIK (ksiegowosc_pracownik,wyplata,czestotliowsc_wyplat, historia_wyplat,premia,pracownikid,ksiegowoscid)
+VALUES (22,1000,'miesiecznie','-1000-1000-1000',300,2221,04);
+
+INSERT INTO KSIEGOWOSC_PRACOWNIK (ksiegowosc_pracownik,wyplata,czestotliowsc_wyplat, historia_wyplat,premia,pracownikid,ksiegowoscid)
+VALUES (33,1200,'miesiecznie','-1200-1200-1200',500,3331,05);
+
+INSERT INTO KSIEGOWOSC_KLIENT (ksiegowosc_klientid,klientid,oplaty, czestotliowsc_oplat,historia_oplat,ksiegowoscid)
+VALUES (55,1,500,'miesiecznie','+500+500+500',01);
+
+INSERT INTO KSIEGOWOSC_KLIENT (ksiegowosc_klientid,klientid,oplaty, czestotliowsc_oplat,historia_oplat,ksiegowoscid)
+VALUES (66,2,800,'tygodniowo','+800+800+800',02);
+
+INSERT INTO SAMOCHOD (samochodid,wyposazenie,liczba_miejsc)
+VALUES (200,'podsatowe+konwoj',3);
+
+INSERT INTO SAMOCHOD (samochodid,wyposazenie,liczba_miejsc)
+VALUES (100,'podstawowe',5);
+
+INSERT INTO samochod_info (samochod_info, stan, dane_techniczne,samochodid,akcjaid)
+VALUES (15,'dobry', 'silnik:4.2 v8 340hp',100,1);
+
+INSERT INTO samochod_info (samochod_info, stan, dane_techniczne,samochodid,akcjaid)
+VALUES (16,'przecietny', 'silnik:2.2 silnik boxer 200hp',200,2);
+
+INSERT INTO pracownik_na_akcji (pracowniknaakcjiid, pracownikid, akcjaid)
+VALUES (1000,1111,1);
+
+
+INSERT INTO pracownik_na_akcji (pracowniknaakcjiid, pracownikid, akcjaid)
+VALUES (2000,2221,2);
+
+Instrukcja ta pokaże którzy pracownicy dostaja wyplate wieksza niz 800
+SELECT *
+FROM KSIEGOWOSC_PRACOWNIK
+WHERE wyplata>800
+
+Instrukcja ta pokaże którzy pracownicy dostaja premie rowna 200
+SELECT *
+FROM KSIEGOWOSC_PRACOWNIK
+WHERE premia=200
+
+Instrukcja dane o osobie ktorej primary key o nazwie osobaid jest rowny 10
+SELECT *
+FROM OSOBA
+WHERE osobaid=10
+
+Instrukcja pokazenie zlaczenie tabeli osoba i pracownik poprzez osobaid
+SELECT p.*,o.*
+FROM OSOBA o
+JOIN PRACOWNIK p  ON p.osobaid=o.osobaid
+
+
+Instrukcja pokazuje zlaczone dane z tabel samochod i samochod-info za pomoca samochodid
+SELECT s.*,i.*
+FROM SAMOCHOD s
+JOIN SAMOCHOD_INFO i  ON s.samochodid=i.samochodid
+
+
+Instrukcja ta pokazuje dane o akcji w ktorej bral udzial pracownik o id 2221
+SELECT k.*,p.*
+FROM AKCJA k
+JOIN PRACOWNIK_NA_AKCJI p  ON k.akcjaid=p.akcjaid
+WHERE p.pracownikid=2221
+
+Instrukcja pokazuje po polaczeniu imie i date urodzenia pracownikow
+SELECT  o.imie,o.data_urodzenia
+FROM PRACOWNIK p
+JOIN osoba o ON o.osobaid=p.osobaid
+group by o.imie, o.data_urodzenia
+
+Instrukja pokazuje osoby z pierwsza litera imienia J
+SELECT * 
+FROM osoba
+WHERE imie like 'J%'
+
+pokazuje pracownikow ktorzy brali udział w wiecej niz  0 akcji
+SELECT COUNT(pracowniknaakcjiid), pracownikid
+FROM pracownik_na_akcji
+GROUP BY pracownikid
+HAVING COUNT(pracowniknaakcjiid) > 0;
+
+pokazuje klientow ktorzy nie byli zangazowani w zadna akcjie.(nie wystepuja tacy)
+SELECT COUNT(akcjaid), klientid
+FROM AKCJA
+GROUP BY klientid
+HAVING COUNT(akcjaid) is null;

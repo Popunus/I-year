@@ -1,0 +1,164 @@
+-- Table: AKCJA
+CREATE TABLE AKCJA (
+    akcjaid integer  NOT NULL,
+    data date  NOT NULL,
+    przebieg_akcji varchar2(100)  NOT NULL,
+    adres varchar2(100)  NOT NULL,
+    samochodid integer  NOT NULL,
+    klientid integer  NOT NULL,
+    CONSTRAINT AKCJA_pk PRIMARY KEY (akcjaid)
+) ;
+
+-- Table: KLIENT
+CREATE TABLE KLIENT (
+    klientid integer  NOT NULL,
+    osobaid integer  NOT NULL,
+    CONSTRAINT KLIENT_pk PRIMARY KEY (klientid)
+) ;
+
+-- Table: KSIEGOWOSC
+CREATE TABLE KSIEGOWOSC (
+    KSIEGOWOSC integer  NOT NULL,
+    nrkarty number(12,0)  NOT NULL,
+    historia_transakcji varchar2(100)  NOT NULL,
+    osobaid integer  NOT NULL,
+    CONSTRAINT KSIEGOWOSC_pk PRIMARY KEY (KSIEGOWOSC)
+) ;
+
+-- Table: KSIEGOWOSC_KLIENT
+CREATE TABLE KSIEGOWOSC_KLIENT (
+    ksiegowosc_klientid integer  NOT NULL,
+    klientid integer  NOT NULL,
+    oplaty number(8,2)  NOT NULL,
+    czestotliowsc_oplat varchar2(100)  NOT NULL,
+    historia_oplat varchar2(100)  NOT NULL,
+    ksiegowoscid integer  NOT NULL,
+    CONSTRAINT KSIEGOWOSC_KLIENT_pk PRIMARY KEY (ksiegowosc_klientid)
+) ;
+
+-- Table: KSIEGOWOSC_PRACOWNIK
+CREATE TABLE KSIEGOWOSC_PRACOWNIK (
+    ksiegowosc_pracownik integer  NOT NULL,
+    wyplata number(8,2)  NOT NULL,
+    czestotliowsc_wyplat varchar2(100)  NOT NULL,
+    historia_wyplat varchar2(100)  NOT NULL,
+    premia number(8,2)  NOT NULL,
+    pracownikid integer  NOT NULL,
+    ksiegowoscid integer  NOT NULL,
+    CONSTRAINT KSIEGOWOSC_PRACOWNIK_pk PRIMARY KEY (ksiegowosc_pracownik)
+) ;
+
+-- Table: OSOBA
+CREATE TABLE OSOBA (
+    osobaid integer  NOT NULL,
+    adres varchar2(100)  NOT NULL,
+    imie varchar2(20)  NOT NULL,
+    nazwisko varchar2(20)  NOT NULL,
+    data_urodzenia date  NOT NULL,
+    CONSTRAINT OSOBA_pk PRIMARY KEY (osobaid)
+) ;
+
+-- Table: PRACOWNIK
+CREATE TABLE PRACOWNIK (
+    pracownikid integer  NOT NULL,
+    data_zatrudnienia date  NOT NULL,
+    stanowisko varchar2(100)  NOT NULL,
+    osobaid integer  NOT NULL,
+    CONSTRAINT PRACOWNIK_pk PRIMARY KEY (pracownikid)
+) ;
+
+-- Table: PRACOWNIK_NA_AKCJI
+CREATE TABLE PRACOWNIK_NA_AKCJI (
+    pracowniknaakcjiid integer  NOT NULL,
+    pracownikid integer  NOT NULL,
+    akcjaid integer  NOT NULL,
+    CONSTRAINT PRACOWNIK_NA_AKCJI_pk PRIMARY KEY (pracowniknaakcjiid)
+) ;
+
+-- Table: SAMOCHOD
+CREATE TABLE SAMOCHOD (
+    samochodid integer  NOT NULL,
+    wyposazenie varchar2(100)  NOT NULL,
+    liczba_miejsc number(3,0)  NOT NULL,
+    CONSTRAINT SAMOCHOD_pk PRIMARY KEY (samochodid)
+) ;
+
+-- Table: SAMOCHOD_INFO
+CREATE TABLE SAMOCHOD_INFO (
+    samochod_info integer  NOT NULL,
+    stan varchar2(100)  NOT NULL,
+    dane_techniczne varchar2(100)  NOT NULL,
+    samochodid integer  NOT NULL,
+    akcjaid integer  NOT NULL,
+    CONSTRAINT SAMOCHOD_INFO_pk PRIMARY KEY (samochod_info)
+) ;
+
+-- foreign keys
+-- Reference: AKCJA_KLIENT (table: AKCJA)
+ALTER TABLE AKCJA ADD CONSTRAINT AKCJA_KLIENT
+    FOREIGN KEY (klientid)
+    REFERENCES KLIENT (klientid);
+
+-- Reference: AKCJA_SAMOCHOD (table: AKCJA)
+ALTER TABLE AKCJA ADD CONSTRAINT AKCJA_SAMOCHOD
+    FOREIGN KEY (samochodid)
+    REFERENCES SAMOCHOD (samochodid);
+
+-- Reference: KLIENT_KLIENT (table: KSIEGOWOSC_KLIENT)
+ALTER TABLE KSIEGOWOSC_KLIENT ADD CONSTRAINT KLIENT_KLIENT
+    FOREIGN KEY (klientid)
+    REFERENCES KLIENT (klientid);
+
+-- Reference: KLIENT_OSOBA (table: KLIENT)
+ALTER TABLE KLIENT ADD CONSTRAINT KLIENT_OSOBA
+    FOREIGN KEY (osobaid)
+    REFERENCES OSOBA (osobaid);
+
+-- Reference: KSIEGOWOSCKLIENT_KSIEGOWOSC (table: KSIEGOWOSC_KLIENT)
+ALTER TABLE KSIEGOWOSC_KLIENT ADD CONSTRAINT KSIEGOWOSCKLIENT_KSIEGOWOSC
+    FOREIGN KEY (ksiegowoscid)
+    REFERENCES KSIEGOWOSC (KSIEGOWOSC);
+
+-- Reference: KSIEGOWOSCPRACOWNIK_KSIEGOWOSC (table: KSIEGOWOSC_PRACOWNIK)
+ALTER TABLE KSIEGOWOSC_PRACOWNIK ADD CONSTRAINT KSIEGOWOSCPRACOWNIK_KSIEGOWOSC
+    FOREIGN KEY (ksiegowoscid)
+    REFERENCES KSIEGOWOSC (KSIEGOWOSC);
+
+-- Reference: KSIEGOWOSCPRACOWNIK_PRACOWNIK (table: KSIEGOWOSC_PRACOWNIK)
+ALTER TABLE KSIEGOWOSC_PRACOWNIK ADD CONSTRAINT KSIEGOWOSCPRACOWNIK_PRACOWNIK
+    FOREIGN KEY (pracownikid)
+    REFERENCES PRACOWNIK (pracownikid);
+
+-- Reference: KSIEGOWOSC_OSOBA (table: KSIEGOWOSC)
+ALTER TABLE KSIEGOWOSC ADD CONSTRAINT KSIEGOWOSC_OSOBA
+    FOREIGN KEY (osobaid)
+    REFERENCES OSOBA (osobaid);
+
+-- Reference: PRACOWNIK_NA_AKCJI_AKCJA (table: PRACOWNIK_NA_AKCJI)
+ALTER TABLE PRACOWNIK_NA_AKCJI ADD CONSTRAINT PRACOWNIK_NA_AKCJI_AKCJA
+    FOREIGN KEY (akcjaid)
+    REFERENCES AKCJA (akcjaid);
+
+-- Reference: PRACOWNIK_NA_AKCJI_PRACOWNIK (table: PRACOWNIK_NA_AKCJI)
+ALTER TABLE PRACOWNIK_NA_AKCJI ADD CONSTRAINT PRACOWNIK_NA_AKCJI_PRACOWNIK
+    FOREIGN KEY (pracownikid)
+    REFERENCES PRACOWNIK (pracownikid);
+
+-- Reference: PRACOWNIK_OSOBA (table: PRACOWNIK)
+ALTER TABLE PRACOWNIK ADD CONSTRAINT PRACOWNIK_OSOBA
+    FOREIGN KEY (osobaid)
+    REFERENCES OSOBA (osobaid);
+
+-- Reference: SAMOCHODINFO_AKCJA (table: SAMOCHOD_INFO)
+ALTER TABLE SAMOCHOD_INFO ADD CONSTRAINT SAMOCHODINFO_AKCJA
+    FOREIGN KEY (akcjaid)
+    REFERENCES AKCJA (akcjaid);
+
+-- Reference: SAMOCHODINFO_SAMOCHOD (table: SAMOCHOD_INFO)
+ALTER TABLE SAMOCHOD_INFO ADD CONSTRAINT SAMOCHODINFO_SAMOCHOD
+    FOREIGN KEY (samochodid)
+    REFERENCES SAMOCHOD (samochodid);
+
+
+
+
