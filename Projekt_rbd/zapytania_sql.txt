@@ -1,0 +1,55 @@
+Instrukcja ta pokaże którzy pracownicy dostaja wyplate wieksza niz 800
+SELECT *
+FROM KSIEGOWOSC_PRACOWNIK
+WHERE wyplata>800
+
+Instrukcja ta pokaże którzy pracownicy dostaja premie rowna 200
+SELECT *
+FROM KSIEGOWOSC_PRACOWNIK
+WHERE premia=200
+
+Instrukcja dane o osobie ktorej primary key o nazwie osobaid jest rowny 10
+SELECT *
+FROM OSOBA
+WHERE osobaid=10
+
+Instrukcja pokazenie zlaczenie tabeli osoba i pracownik poprzez osobaid
+SELECT p.*,o.*
+FROM OSOBA o
+JOIN PRACOWNIK p  ON p.osobaid=o.osobaid
+
+
+Instrukcja pokazuje zlaczone dane z tabel samochod i samochod-info za pomoca samochodid
+SELECT s.*,i.*
+FROM SAMOCHOD s
+JOIN SAMOCHOD_INFO i  ON s.samochodid=i.samochodid
+
+
+Instrukcja ta pokazuje dane o akcji w ktorej bral udzial pracownik o id 2221
+SELECT k.*,p.*
+FROM AKCJA k
+JOIN PRACOWNIK_NA_AKCJI p  ON k.akcjaid=p.akcjaid
+WHERE p.pracownikid=2221
+
+Instrukcja pokazuje po polaczeniu imie i date urodzenia pracownikow
+SELECT  o.imie,o.data_urodzenia
+FROM PRACOWNIK p
+JOIN osoba o ON o.osobaid=p.osobaid
+group by o.imie, o.data_urodzenia
+
+Instrukja pokazuje osoby z pierwsza litera imienia J
+SELECT * 
+FROM osoba
+WHERE imie like 'J%'
+
+pokazuje pracownikow ktorzy brali udział w wiecej niz  0 akcji
+SELECT COUNT(pracowniknaakcjiid), pracownikid
+FROM pracownik_na_akcji
+GROUP BY pracownikid
+HAVING COUNT(pracowniknaakcjiid) > 0;
+
+pokazuje klientow ktorzy nie byli zangazowani w zadna akcjie.(nie wystepuja tacy)
+SELECT COUNT(akcjaid), klientid
+FROM AKCJA
+GROUP BY klientid
+HAVING COUNT(akcjaid) is null;
